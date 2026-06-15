@@ -1,5 +1,6 @@
 export type AirQualityStatus = "Good" | "Moderate" | "Bad";
 export type RiskLevel = "Low" | "Medium" | "High";
+export type QualityLabel = "Excellent" | "Moderate" | "Poor";
 
 export interface LocationEntry {
   id: string;
@@ -21,6 +22,8 @@ export interface AirQualityData {
   no2: number;
   status: AirQualityStatus;
   riskLevel: RiskLevel;
+  qualityLabel: QualityLabel;
+  riskInterpretation: string;
   insight: string;
 }
 
@@ -28,6 +31,7 @@ export interface ComparisonResult {
   countryA: AirQualityData;
   countryB: AirQualityData;
   betterCountry: string;
+  worstCountry: string;
   summary: string;
 }
 
@@ -190,10 +194,29 @@ export function getStatusFromAqi(aqi: number): AirQualityStatus {
   return "Bad";
 }
 
+export function getQualityLabel(status: AirQualityStatus): QualityLabel {
+  if (status === "Good") return "Excellent";
+  if (status === "Moderate") return "Moderate";
+  return "Poor";
+}
+
 export function getRiskLevel(aqi: number, status: AirQualityStatus): RiskLevel {
   if (status === "Good" && aqi <= 50) return "Low";
   if (status === "Bad" || aqi > 100) return "High";
   return "Medium";
+}
+
+export function getRiskInterpretation(
+  status: AirQualityStatus,
+  riskLevel: RiskLevel
+): string {
+  if (status === "Good" && riskLevel === "Low") {
+    return "Safe for outdoor activities";
+  }
+  if (status === "Moderate" || riskLevel === "Medium") {
+    return "Moderate pollution risk — sensitive groups take caution";
+  }
+  return "High pollution risk — limit outdoor exposure";
 }
 
 export function getStatusColor(status: AirQualityStatus): string {
@@ -207,8 +230,8 @@ export function getStatusColor(status: AirQualityStatus): string {
   }
 }
 
-export function getGoogleBlue(): string {
-  return "#1a73e8";
+export function getAqiRingPercent(aqi: number): number {
+  return Math.min(100, Math.round((aqi / 150) * 100));
 }
 
 export function normalizePollutant(
@@ -229,7 +252,6 @@ function describePollutant(
 }
 
 export function generateInsight(
-  entry: LocationEntry,
   status: AirQualityStatus,
   pm25: number,
   pm10: number,
@@ -241,18 +263,18 @@ export function generateInsight(
     describePollutant("NO₂", no2, WHO_LIMITS.no2),
   ].filter(Boolean) as string[];
 
-  const pollutantNote =
+  const note =
     parts.length > 0
       ? ` due to ${parts.slice(0, 2).join(" and ")}`
       : "";
 
   if (status === "Good") {
-    return `Air quality in ${entry.country} is Good${pollutantNote}. Conditions are healthy for most people.`;
+    return `Air quality is Good${note}. Conditions are healthy for most people.`;
   }
   if (status === "Moderate") {
-    return `Air quality in ${entry.country} is Moderate${pollutantNote}. Sensitive groups may want to limit prolonged outdoor activity.`;
+    return `Air quality is Moderate${note}. Sensitive groups may want to limit prolonged outdoor activity.`;
   }
-  return `Air quality in ${entry.country} is Poor${pollutantNote}. Consider reducing outdoor exposure, especially for sensitive groups.`;
+  return `Air quality is Poor${note}. Consider reducing outdoor exposure.`;
 }
 
 export function generateComparisonSummary(
@@ -265,8 +287,7 @@ export function generateComparisonSummary(
   }
   const winner = betterCountry === a.country ? a : b;
   const loser = betterCountry === a.country ? b : a;
-  const delta = Math.abs(a.aqi - b.aqi);
-  return `${winner.country} has better air quality than ${loser.country} today — AQI ${winner.aqi} vs ${loser.aqi} (${delta} point${delta === 1 ? "" : "s"} lower).`;
+  return `${winner.country} has better air quality than ${loser.country} today.`;
 }
 
 interface OpenMeteoCurrent {
@@ -282,11 +303,39 @@ interface OpenMeteoResponse {
   reason?: string;
 }
 
+function buildAirQualityData(
+  entry: LocationEntry,
+  aqi: number,
+  pm25: number,
+  pm10: number,
+  no2: number
+): AirQualityData {
+  const status = getStatusFromAqi(aqi);
+  const riskLevel = getRiskLevel(aqi, status);
+
+  return {
+    location: entry.location,
+    country: entry.country,
+    flag: entry.flag,
+    aqi,
+    pm25,
+    pm10,
+    no2,
+    status,
+    riskLevel,
+    qualityLabel: getQualityLabel(status),
+    riskInterpretation: getRiskInterpretation(status, riskLevel),
+    insight: generateInsight(status, pm25, pm10, no2),
+  };
+}
+
 export async function fetchAirQuality(input: string): Promise<AirQualityData> {
   const entry = resolveLocation(input);
   if (!entry) {
     const supported = LOCATIONS.map((l) => l.country).join(", ");
-    throw new Error(`Unknown location "${input}". Supported countries: ${supported}.`);
+    throw new Error(
+      `Unknown location "${input}". Supported countries: ${supported}.`
+    );
   }
 
   const url = new URL("https://air-quality-api.open-meteo.com/v1/air-quality");
@@ -314,21 +363,7 @@ export async function fetchAirQuality(input: string): Promise<AirQualityData> {
     aqi = Math.round(pm25 * 2.5 + pm10 * 0.6 + no2 * 0.15);
   }
 
-  const status = getStatusFromAqi(aqi);
-  const riskLevel = getRiskLevel(aqi, status);
-
-  return {
-    location: entry.location,
-    country: entry.country,
-    flag: entry.flag,
-    aqi,
-    pm25,
-    pm10,
-    no2,
-    status,
-    riskLevel,
-    insight: generateInsight(entry, status, pm25, pm10, no2),
-  };
+  return buildAirQualityData(entry, aqi, pm25, pm10, no2);
 }
 
 export async function compareAirQuality(
@@ -347,10 +382,18 @@ export async function compareAirQuality(
         ? countryB.country
         : "Tie";
 
+  const worstCountry =
+    countryA.aqi > countryB.aqi
+      ? countryA.country
+      : countryB.aqi > countryA.aqi
+        ? countryB.country
+        : "Tie";
+
   return {
     countryA,
     countryB,
     betterCountry,
+    worstCountry,
     summary: generateComparisonSummary(countryA, countryB, betterCountry),
   };
 }

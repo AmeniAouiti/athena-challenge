@@ -133,8 +133,62 @@ body {
 }
 
 .content-area {
-  min-height: 320px;
+  min-height: 360px;
   position: relative;
+}
+
+/* ── Dashboard grid layout ── */
+.dashboard-grid {
+  display: grid;
+}
+
+@media (min-width: 1024px) {
+  .dashboard-grid {
+    grid-template-columns: minmax(280px, 320px) 1fr;
+    align-items: start;
+  }
+
+  .controls-panel {
+    position: sticky;
+    top: 1.5rem;
+    overflow: visible;
+  }
+}
+
+/* ── Sticky mobile compare bar ── */
+.sticky-compare-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 40;
+  padding: 12px 16px;
+  padding-bottom: max(12px, env(safe-area-inset-bottom));
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(12px);
+  border-top: 1px solid var(--google-grey-200);
+  box-shadow: 0 -4px 16px rgba(60, 64, 67, 0.08);
+  animation: slide-up-bar 0.4s var(--ease-out) forwards;
+}
+
+@keyframes slide-up-bar {
+  from {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── AQI ring animation ── */
+.aqi-ring-progress {
+  transition: stroke-dashoffset 0.9s var(--ease-out);
+}
+
+.pollutant-bar-fill {
+  transition: width 0.8s var(--ease-out);
 }
 
 @keyframes fade-in {
@@ -246,7 +300,6 @@ body {
   50% { transform: rotate(180deg) scale(0.92); }
   to { transform: rotate(360deg) scale(1); }
 }
-
 /* ── Summary banner ── */
 .summary-banner {
   animation: slide-down 0.5s var(--ease-out) forwards;

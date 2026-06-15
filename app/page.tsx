@@ -2,7 +2,7 @@ import AirQualityDashboard from "@/components/AirQualityDashboard";
 
 export default function Home() {
   return (
-    <div className="bg-animated-gradient flex min-h-full flex-1 flex-col px-4 py-8 sm:px-6 sm:py-12">
+    <div className="bg-animated-gradient flex min-h-full flex-1 flex-col px-4 py-6 sm:px-6 sm:py-10">
       <AirQualityDashboard />
       <footer className="dashboard-enter mx-auto mt-10 w-full max-w-4xl text-center text-xs text-[#9aa0a6]">
         Data from{" "}
