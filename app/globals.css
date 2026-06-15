@@ -1,26 +1,283 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --google-blue: #1a73e8;
+  --google-green: #34a853;
+  --google-yellow: #fbbc04;
+  --google-red: #ea4335;
+  --google-grey-900: #202124;
+  --google-grey-700: #5f6368;
+  --google-grey-200: #e8eaed;
+  --google-grey-100: #f1f3f4;
+  --google-grey-50: #f8f9fa;
+  --background: #f8f9fa;
+  --foreground: #202124;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --font-sans: var(--font-roboto);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-roboto), Roboto, "Helvetica Neue", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Subtle animated gradient background ── */
+.bg-animated-gradient {
+  background: linear-gradient(
+    135deg,
+    #f8f9fa 0%,
+    #f0f4f8 25%,
+    #f8f9fa 50%,
+    #eef3fc 75%,
+    #f8f9fa 100%
+  );
+  background-size: 400% 400%;
+  animation: gradient-shift 18s ease infinite;
+}
+
+@keyframes gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* ── Splash screen ── */
+.splash-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  animation: splash-enter 0.5s var(--ease-out) forwards;
+}
+
+.splash-exit {
+  animation: splash-exit 0.45s var(--ease-out) forwards;
+  pointer-events: none;
+}
+
+.splash-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  text-align: center;
+}
+
+.splash-icon {
+  margin-bottom: 4px;
+}
+
+.splash-spinner-arc {
+  transform-origin: center;
+  animation: splash-spin 1s linear infinite;
+}
+
+.splash-title {
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: var(--google-grey-900);
+  letter-spacing: -0.02em;
+}
+
+.splash-subtitle {
+  font-size: 0.875rem;
+  color: var(--google-grey-700);
+}
+
+@keyframes splash-enter {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes splash-exit {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes splash-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Dashboard entrance ── */
+.dashboard-enter {
+  animation: dashboard-enter 0.55s var(--ease-out) forwards;
+}
+
+@keyframes dashboard-enter {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── Content state transitions ── */
+.content-fade-in {
+  animation: fade-in 0.4s var(--ease-out) forwards;
+}
+
+.content-fade-out {
+  animation: fade-out 0.25s var(--ease-out) forwards;
+}
+
+.content-area {
+  min-height: 320px;
+  position: relative;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fade-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+/* ── Card stagger animations ── */
+.card-stagger {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: card-enter 0.65s var(--ease-out) forwards;
+}
+
+@keyframes card-enter {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.card-hover {
+  transition:
+    box-shadow 0.3s var(--ease-out),
+    transform 0.3s var(--ease-out),
+    border-color 0.3s var(--ease-out);
+}
+
+.card-hover:hover {
+  box-shadow:
+    0 2px 6px rgba(60, 64, 67, 0.12),
+    0 8px 24px rgba(60, 64, 67, 0.1);
+  transform: translateY(-2px);
+}
+
+/* ── Winner badge pulse ── */
+.badge-winner-glow {
+  animation: badge-glow 2s ease-in-out infinite;
+}
+
+@keyframes badge-glow {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(52, 168, 83, 0.25);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(52, 168, 83, 0);
+  }
+}
+
+/* ── Shimmer skeleton ── */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.shimmer {
+  background: linear-gradient(90deg, #f1f3f4 25%, #e8eaed 50%, #f1f3f4 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+}
+
+.skeleton-enter {
+  animation: fade-in 0.3s var(--ease-out) forwards;
+}
+
+/* ── Buttons ── */
+.btn-animated {
+  transition:
+    transform 0.15s var(--ease-out),
+    background-color 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.btn-animated:hover:not(:disabled) {
+  transform: scale(1.02);
+}
+
+.btn-animated:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+.btn-primary:hover:not(:disabled) {
+  background-color: #1765cc;
+  box-shadow: 0 2px 8px rgba(26, 115, 232, 0.35);
+}
+
+.btn-icon:hover:not(:disabled) {
+  border-color: var(--google-blue);
+  background-color: #e8f0fe;
+  color: var(--google-blue);
+}
+
+.btn-swap-spin {
+  animation: swap-rotate 0.35s var(--ease-out);
+}
+
+@keyframes swap-rotate {
+  from { transform: rotate(0deg) scale(1); }
+  50% { transform: rotate(180deg) scale(0.92); }
+  to { transform: rotate(360deg) scale(1); }
+}
+
+/* ── Summary banner ── */
+.summary-banner {
+  animation: slide-down 0.5s var(--ease-out) forwards;
+}
+
+@keyframes slide-down {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── Reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .bg-animated-gradient {
+    animation: none;
+  }
+
+  .card-hover:hover {
+    transform: none;
+  }
 }

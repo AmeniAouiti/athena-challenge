@@ -1,0 +1,128 @@
+[
+  {
+    "id": "tunisia",
+    "country": "Tunisia",
+    "location": "Tunis",
+    "flag": "🇹🇳",
+    "lat": 36.8065,
+    "lon": 10.1815,
+    "aliases": ["tunisia", "tunis", "tn"]
+  },
+  {
+    "id": "france",
+    "country": "France",
+    "location": "Paris",
+    "flag": "🇫🇷",
+    "lat": 48.8566,
+    "lon": 2.3522,
+    "aliases": ["france", "paris", "fr"]
+  },
+  {
+    "id": "usa",
+    "country": "USA",
+    "location": "New York",
+    "flag": "🇺🇸",
+    "lat": 40.7128,
+    "lon": -74.006,
+    "aliases": ["usa", "us", "united states", "america", "new york", "nyc"]
+  },
+  {
+    "id": "uk",
+    "country": "UK",
+    "location": "London",
+    "flag": "🇬🇧",
+    "lat": 51.5074,
+    "lon": -0.1278,
+    "aliases": ["uk", "united kingdom", "britain", "london", "gb"]
+  },
+  {
+    "id": "germany",
+    "country": "Germany",
+    "location": "Berlin",
+    "flag": "🇩🇪",
+    "lat": 52.52,
+    "lon": 13.405,
+    "aliases": ["germany", "berlin", "de"]
+  },
+  {
+    "id": "japan",
+    "country": "Japan",
+    "location": "Tokyo",
+    "flag": "🇯🇵",
+    "lat": 35.6762,
+    "lon": 139.6503,
+    "aliases": ["japan", "tokyo", "jp"]
+  },
+  {
+    "id": "china",
+    "country": "China",
+    "location": "Beijing",
+    "flag": "🇨🇳",
+    "lat": 39.9042,
+    "lon": 116.4074,
+    "aliases": ["china", "beijing", "cn"]
+  },
+  {
+    "id": "india",
+    "country": "India",
+    "location": "Delhi",
+    "flag": "🇮🇳",
+    "lat": 28.6139,
+    "lon": 77.209,
+    "aliases": ["india", "delhi", "new delhi", "in"]
+  },
+  {
+    "id": "brazil",
+    "country": "Brazil",
+    "location": "São Paulo",
+    "flag": "🇧🇷",
+    "lat": -23.5505,
+    "lon": -46.6333,
+    "aliases": ["brazil", "sao paulo", "são paulo", "br"]
+  },
+  {
+    "id": "canada",
+    "country": "Canada",
+    "location": "Toronto",
+    "flag": "🇨🇦",
+    "lat": 43.6532,
+    "lon": -79.3832,
+    "aliases": ["canada", "toronto", "ca"]
+  },
+  {
+    "id": "australia",
+    "country": "Australia",
+    "location": "Sydney",
+    "flag": "🇦🇺",
+    "lat": -33.8688,
+    "lon": 151.2093,
+    "aliases": ["australia", "sydney", "au"]
+  },
+  {
+    "id": "egypt",
+    "country": "Egypt",
+    "location": "Cairo",
+    "flag": "🇪🇬",
+    "lat": 30.0444,
+    "lon": 31.2357,
+    "aliases": ["egypt", "cairo", "eg"]
+  },
+  {
+    "id": "saudi-arabia",
+    "country": "Saudi Arabia",
+    "location": "Riyadh",
+    "flag": "🇸🇦",
+    "lat": 24.7136,
+    "lon": 46.6753,
+    "aliases": ["saudi arabia", "saudi", "riyadh", "sa"]
+  },
+  {
+    "id": "south-africa",
+    "country": "South Africa",
+    "location": "Johannesburg",
+    "flag": "🇿🇦",
+    "lat": -26.2041,
+    "lon": 28.0473,
+    "aliases": ["south africa", "johannesburg", "za"]
+  }
+]

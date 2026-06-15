@@ -1,36 +1,65 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Global Air Quality Comparison Dashboard
 
-## Getting Started
+Athena AI Interview Challenge — compare real-time air quality across **14 countries worldwide** using [Open-Meteo Air Quality API](https://open-meteo.com/en/docs/air-quality-api).
 
-First, run the development server:
+## Quick start
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- **Dashboard:** http://localhost:3000
+- **REST API:** http://localhost:3000/api/mcp?country=France
+- **Athena MCP:** http://localhost:8787/mcp
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Supported countries
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Tunisia, France, USA, UK, Germany, Japan, China, India, Brazil, Canada, Australia, Egypt, Saudi Arabia, South Africa
 
-## Learn More
+## API
 
-To learn more about Next.js, take a look at the following resources:
+### Single country
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```
+GET /api/mcp?country=Germany
+GET /api/mcp?city=Berlin
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```json
+{
+  "location": "Berlin",
+  "country": "Germany",
+  "flag": "🇩🇪",
+  "aqi": 42,
+  "pm25": 8.1,
+  "pm10": 14.2,
+  "no2": 12.5,
+  "status": "Good",
+  "riskLevel": "Low",
+  "insight": "Air quality in Germany is Good due to low PM2.5 and moderate NO₂..."
+}
+```
 
-## Deploy on Vercel
+### Compare two countries
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```
+GET /api/mcp?countryA=Canada&countryB=India
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Features
+
+- Google-style UI (Roboto, #1a73e8 blue, clean cards, shimmer skeletons)
+- Searchable country dropdowns with flags
+- Swap countries button
+- Auto-compare on selection change (after first compare)
+- Progress bars for PM2.5, PM10, NO₂ (WHO-normalized)
+- Smart insights and comparison summaries
+- Athena MCP widget with `compare_air_quality` and `get_air_quality` tools
+
+## Athena setup
+
+1. `ngrok http 8787`
+2. Create agent at https://athenachat.bot/chatbot/mybots/create
+3. MCP URL: `https://<tunnel>/mcp`
+4. Try: *"Compare air quality between Canada and India"*

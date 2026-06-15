@@ -2,16 +2,22 @@
   "name": "athena-challenge",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
-    "dev": "next dev",
+    "dev": "concurrently -k -n next,mcp -c blue,green \"next dev\" \"node server/mcp-server.mjs\"",
+    "dev:next": "next dev",
+    "dev:mcp": "node server/mcp-server.mjs",
     "build": "next build",
-    "start": "next start",
+    "start": "concurrently -k \"next start\" \"node server/mcp-server.mjs\"",
     "lint": "eslint"
   },
   "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.20.2",
+    "concurrently": "^9.2.0",
     "next": "16.2.9",
     "react": "19.2.4",
-    "react-dom": "19.2.4"
+    "react-dom": "19.2.4",
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
